@@ -1,10 +1,11 @@
 import tokenFixture from '../../fixtures/token.json'
-import { faker } from '@faker-js/faker'
+import statusFixture from '../../fixtures/status.json'
 import postProductsReviewWooCommerceSchema from '../../contracts/productsReview/post.contract'
 import putProductsReviewWooCommerceSchema from '../../contracts/productsReview/put.contract'
 import deleteProductsReviewWooCommerceSchema from '../../contracts/productsReview/delete.contract'
+import { faker } from '@faker-js/faker'
 
-describe('Products', () => {
+describe('Products review WooCommerce', () => {
   //Variáveis comuns ao describe
   let productId = 0;
   let fakeReview = faker.lorem.sentence(5);
@@ -14,7 +15,7 @@ describe('Products', () => {
   let randomRating = Math.floor(Math.random() * (5 - 1) + 1);
   let reviewId = 0;
 
-  it.skip('Criar um product review com POST', () => {
+  it('Criar um product review com POST', () => {
 
     cy.getListAllProductsWooCommerce(tokenFixture.token).then((getListAllProductsResponse) => {
       //expect(getListAllProductsResponse.status).to.be.eq(200);
@@ -32,7 +33,7 @@ describe('Products', () => {
       }
 
       cy.postProductsReviewWooCommerce(tokenFixture.token, productReview).then((postProductsReviewResponse) => {
-        expect(postProductsReviewResponse.status).to.be.eq(201);
+        expect(postProductsReviewResponse.status).to.be.eq(statusFixture.created);
         reviewId = postProductsReviewResponse.body.id;
         return postProductsReviewWooCommerceSchema.validateAsync(postProductsReviewResponse.body);
       }).then(() => {
@@ -41,7 +42,7 @@ describe('Products', () => {
     })
   })
   
-  it.skip('Editar product review criado com PUT', () => {
+  it('Editar product review criado com PUT', () => {
 
     cy.getListAllProductsWooCommerce(tokenFixture.token).then((getListAllProductsResponse) => {
       let body = getListAllProductsResponse.body;
@@ -58,7 +59,6 @@ describe('Products', () => {
       }
 
       cy.postProductsReviewWooCommerce(tokenFixture.token, productReviewCreate).then((postProductsReviewResponse) => {
-        expect(postProductsReviewResponse.status).to.be.eq(201);
         reviewId = postProductsReviewResponse.body.id;
       }).then(() => {
 
@@ -69,8 +69,7 @@ describe('Products', () => {
 
         cy.putProductsReviewWooCommerce(tokenFixture.token, reviewId, productReviewEdit)
           .then((putProductsReviewResponse) => {
-            expect(putProductsReviewResponse.status).to.be.eq(200);
-            alert(putProductsReviewResponse.body);
+            expect(putProductsReviewResponse.status).to.be.eq(statusFixture.ok);
             return putProductsReviewWooCommerceSchema.validateAsync(putProductsReviewResponse.body);
         }).then(() => {
           cy.deleteProductsReviewWooCommerce(tokenFixture.token, reviewId);
@@ -79,7 +78,7 @@ describe('Products', () => {
     })
   })
   
-  it.only('Deletar product review criado com DELETE', () => {
+  it('Deletar product review criado com DELETE', () => {
 
     cy.getListAllProductsWooCommerce(tokenFixture.token).then((getListAllProductsResponse) => {
       let body = getListAllProductsResponse.body;
@@ -101,7 +100,7 @@ describe('Products', () => {
       }).then(() => {
 
         cy.deleteProductsReviewWooCommerce(tokenFixture.token, reviewId).then((deleteProductsReviewResponse) => {
-          expect(deleteProductsReviewResponse.status).to.be.eq(200);
+          expect(deleteProductsReviewResponse.status).to.be.eq(statusFixture.ok);
           expect(deleteProductsReviewResponse.body.deleted).to.be.true;
           return deleteProductsReviewWooCommerceSchema.validateAsync(deleteProductsReviewResponse.body);
         })

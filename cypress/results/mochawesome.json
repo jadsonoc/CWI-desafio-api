@@ -1,0 +1,143 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 3,
+    "passes": 3,
+    "pending": 0,
+    "failures": 0,
+    "start": "2022-11-27T03:27:10.920Z",
+    "end": "2022-11-27T03:27:38.092Z",
+    "duration": 27172,
+    "testsRegistered": 3,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "0eae2017-c922-4984-a50a-f408dede8450",
+      "title": "",
+      "fullFile": "cypress/api/wooCommerce/productsReview.cy.js",
+      "file": "cypress/api/wooCommerce/productsReview.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "21bd71d2-161d-48b6-aba6-a1dbd4034350",
+          "title": "Products review WooCommerce",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Criar um product review com POST",
+              "fullTitle": "Products review WooCommerce Criar um product review com POST",
+              "timedOut": null,
+              "duration": 10039,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.getListAllProductsWooCommerce(_token.default.token).then(getListAllProductsResponse => {\n  //expect(getListAllProductsResponse.status).to.be.eq(200);\n  let body = getListAllProductsResponse.body;\n  body.sort(() => .5 - Math.random());\n  productId = body[0].id;\n}).then(() => {\n  var productReview = {\n    product_id: productId,\n    review: fakeReview,\n    reviewer: fakeFirstName + \" \" + fakeLastName,\n    reviewer_email: fakeEmail,\n    rating: randomRating\n  };\n  cy.postProductsReviewWooCommerce(_token.default.token, productReview).then(postProductsReviewResponse => {\n    expect(postProductsReviewResponse.status).to.be.eq(201);\n    reviewId = postProductsReviewResponse.body.id;\n    return _post.default.validateAsync(postProductsReviewResponse.body);\n  }).then(() => {\n    cy.deleteProductsReviewWooCommerce(_token.default.token, reviewId);\n  });\n});",
+              "err": {},
+              "uuid": "03091874-c45e-4093-ba53-2a73d98b6a35",
+              "parentUUID": "21bd71d2-161d-48b6-aba6-a1dbd4034350",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Editar product review criado com PUT",
+              "fullTitle": "Products review WooCommerce Editar product review criado com PUT",
+              "timedOut": null,
+              "duration": 9788,
+              "state": "passed",
+              "speed": "medium",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.getListAllProductsWooCommerce(_token.default.token).then(getListAllProductsResponse => {\n  let body = getListAllProductsResponse.body;\n  body.sort(() => .5 - Math.random()); //Randomiza o retorno para não realizar o teste sempre com o primeiro\n  productId = body[0].id;\n}).then(() => {\n  var productReviewCreate = {\n    product_id: productId,\n    review: fakeReview,\n    reviewer: fakeFirstName + \" \" + fakeLastName,\n    reviewer_email: fakeEmail,\n    rating: randomRating\n  };\n  cy.postProductsReviewWooCommerce(_token.default.token, productReviewCreate).then(postProductsReviewResponse => {\n    expect(postProductsReviewResponse.status).to.be.eq(201);\n    reviewId = postProductsReviewResponse.body.id;\n  }).then(() => {\n    var productReviewEdit = {\n      review: _faker.faker.lorem.sentence(10),\n      rating: Math.floor(Math.random() * (10 - 1) + 1)\n    };\n    cy.putProductsReviewWooCommerce(_token.default.token, reviewId, productReviewEdit).then(putProductsReviewResponse => {\n      expect(putProductsReviewResponse.status).to.be.eq(200);\n      return _put.default.validateAsync(putProductsReviewResponse.body);\n    }).then(() => {\n      cy.deleteProductsReviewWooCommerce(_token.default.token, reviewId);\n    });\n  });\n});",
+              "err": {},
+              "uuid": "47afe7ef-aece-4342-ae7e-9abb23d0ccc7",
+              "parentUUID": "21bd71d2-161d-48b6-aba6-a1dbd4034350",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Deletar product review criado com DELETE",
+              "fullTitle": "Products review WooCommerce Deletar product review criado com DELETE",
+              "timedOut": null,
+              "duration": 7117,
+              "state": "passed",
+              "speed": "medium",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.getListAllProductsWooCommerce(_token.default.token).then(getListAllProductsResponse => {\n  let body = getListAllProductsResponse.body;\n  body.sort(() => .5 - Math.random());\n  productId = body[0].id;\n}).then(() => {\n  var productReviewCreate = {\n    product_id: productId,\n    review: fakeReview,\n    reviewer: fakeFirstName + \" \" + fakeLastName,\n    reviewer_email: fakeEmail,\n    rating: randomRating\n  };\n  cy.postProductsReviewWooCommerce(_token.default.token, productReviewCreate).then(postProductsReviewResponse => {\n    //expect(postProductsReviewResponse.status).to.be.eq(201);\n    reviewId = postProductsReviewResponse.body.id;\n  }).then(() => {\n    cy.deleteProductsReviewWooCommerce(_token.default.token, reviewId).then(deleteProductsReviewResponse => {\n      expect(deleteProductsReviewResponse.status).to.be.eq(200);\n      expect(deleteProductsReviewResponse.body.deleted).to.be.true;\n      return _delete.default.validateAsync(deleteProductsReviewResponse.body);\n    });\n  });\n});",
+              "err": {},
+              "uuid": "7779e53f-21c0-414e-b50c-4c93a4860aba",
+              "parentUUID": "21bd71d2-161d-48b6-aba6-a1dbd4034350",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "03091874-c45e-4093-ba53-2a73d98b6a35",
+            "47afe7ef-aece-4342-ae7e-9abb23d0ccc7",
+            "7779e53f-21c0-414e-b50c-4c93a4860aba"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 26944,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.0.1"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.3"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "cypress/results",
+        "overwrite": true,
+        "html": false,
+        "json": true
+      },
+      "version": "6.2.0"
+    }
+  }
+}
